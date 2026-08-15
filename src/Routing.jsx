@@ -1,18 +1,17 @@
-import { Suspense, memo } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import Fallback from './fallback';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import SearchPage from './pages/Search';
+import Apps from './pages/Apps';
+import Settings from './pages/Settings';
 
-const Routing = memo(({ pages }) => {
+export default function Routing() {
   return (
-    <Suspense fallback={<Fallback />}>
-      <Routes>
-        {pages.map((page, index) => (
-          <Route key={`${page.path}-${index}`} path={page.path} element={page.element} />
-        ))}
-      </Routes>
-    </Suspense>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/search" element={<SearchPage />} />
+      <Route path="/apps" element={<Apps />} />
+      <Route path="/settings" element={<Settings />} />
+    </Routes>
   );
-});
-
-Routing.displayName = 'Routing';
-export default Routing;
+}
