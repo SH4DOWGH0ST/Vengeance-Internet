@@ -1,57 +1,23 @@
-import Tabs from '/src/components/loader/Tabs';
-import Omnibox from '/src/components/loader/Omnibox';
-import Viewer from '/src/components/loader/Viewer';
-import Menu from '/src/components/loader/Menu';
-import loaderStore from '/src/utils/hooks/loader/useLoaderStore';
-import { process } from '/src/utils/hooks/loader/utils';
-import { useOptions } from '../utils/optionsContext';
-import { useEffect } from 'react';
+import React from 'react';
+import SearchContainer from '../components/SearchContainer';
+import Navbar from '../layouts/Nav'; // Adjust if your navigation layout path is different
 
-export default function Loader({ config = {} }) {
-  const { url, ui = true, zoom, alerts = false } = config;
-  const { options } = useOptions();
-  const tabs = loaderStore((state) => state.tabs);
-  const updateUrl = loaderStore((state) => state.updateUrl);
-  const barStyle = {
-    backgroundColor: options.barColor || '#09121e',
-  };
-
-  useEffect(() => {
-    if (url && tabs.length > 0) {
-      //only 1 tab on initial load so tabs[0]
-      const tab = tabs[0];
-      const processedUrl = process(url, false, options.prType || 'auto', options.engine || null);
-      if (processedUrl && tab.url !== processedUrl) {
-        updateUrl(tab.id, processedUrl);
-      }
-    }
-  }, [url, tabs, updateUrl, options.prType]);
-
-  useEffect(() => {
-    loaderStore.getState().clearStore({ showTb: options.showTb ?? true });
-  }, []);
-
+export default function SearchPage() {
   return (
-    <div className="flex flex-col w-full h-screen">
-      {ui && (
-        <>
-          <div 
-            className="flex flex-col w-full" 
-            style={barStyle}
-            onClick={() => loaderStore.getState().showMenu && loaderStore.getState().toggleMenu()}
-          >
-            <Tabs />
-            <Omnibox />
-          </div>
-          <Menu />
-        </>
-      )}
-      <div 
-        className="flex-1 w-full"
-        onClick={() => loaderStore.getState().showMenu && loaderStore.getState().toggleMenu()}
-      >
-        <Viewer conf={{ zoom: zoom, alerts: alerts }} />
-      </div>
+    <div className="min-h-screen bg-gray-950 text-white flex flex-col">
+      {/* Navigation Bar */}
+      <Navbar />
+
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col items-center justify-center p-6">
+        <div className="w-full max-w-3xl text-center mb-8">
+          <h1 className="text-4xl font-extrabold tracking-tight mb-2">Web Search & Proxy</h1>
+          <p className="text-gray-400">Browse securely and privately using your custom search setup.</p>
+        </div>
+
+        {/* The Search Container Component */}
+        <SearchContainer />
+      </main>
     </div>
   );
 }
