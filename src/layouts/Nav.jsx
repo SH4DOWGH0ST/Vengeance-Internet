@@ -1,79 +1,36 @@
-import { useNavigate } from 'react-router-dom';
-import NavItem from '../components/NavItem';
-import { LayoutGrid, Gamepad2, Cog } from 'lucide-react';
-import { useOptions } from '/src/utils/optionsContext';
-import pkg from '../../package.json';
-import nav from '../styles/nav.module.css';
-import theme from '../styles/theming.module.css';
-import clsx from 'clsx';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import Logo from '../components/Logo';
-import { memo, useMemo, useCallback } from 'react';
+import Starfield from '../components/Starfield';
 
-const version = pkg.version;
-const itemSize = 16;
-
-const navItems = [
-  { name: 'Apps', id: 'btn-a', type: LayoutGrid, route: '/materials' },
-  { name: 'Games', id: 'btn-g', type: Gamepad2, route: '/docs' },
-  { name: 'Settings', id: 'btn-s', type: Cog, route: '/settings' },
-];
-
-const Nav = memo(() => {
-  const navigate = useNavigate();
-  const { options } = useOptions();
-
-  const scale = Number(options.navScale || 1);
-  const dimensions = useMemo(
-    () => ({
-      navHeight: Math.round(69 * scale),
-      logoWidth: Math.round(122 * scale),
-      logoHeight: Math.round(41 * scale),
-      versionFont: Math.round(9 * scale),
-      versionMargin: Math.round(-10 * scale),
-    }),
-    [scale],
-  );
-
-  const handleLogoClick = useCallback(() => navigate('/'), [navigate]);
-
-  const items = useMemo(
-    () =>
-      navItems.map((item) => ({
-        ...item,
-        size: itemSize,
-        onClick: () => navigate(item.route),
-      })),
-    [navigate],
-  );
-
+export default function Nav() {
   return (
-    <div
-      className={clsx(
-        nav.nav,
-        theme['nav-backgroundColor'],
-        theme[`theme-${options.theme || 'default'}`],
-        ' w-full shadow-x1/20 flex items-center pl-6 pr-5 gap-5 z-50',
-      )}
-      style={{ height: `${dimensions.navHeight}px` }}
-    >
-      <Logo width={dimensions.logoWidth} height={dimensions.logoHeight} action={handleLogoClick} />
-      <div
-        className="border rounded-full text-center"
-        style={{
-          fontSize: `${dimensions.versionFont}px`,
-          marginLeft: `${dimensions.versionMargin}px`,
-          paddingLeft: '0.3rem',
-          paddingRight: '0.3rem',
-        }}
-      >
-        {'v' + version}
-      </div>
-      <div className="flex items-center gap-5 ml-auto" style={{ height: 'calc(100% - 0.5rem)' }}>
-        <NavItem items={items} />
-      </div>
-    </div>
-  );
-});
+    <>
+      {/* Animated Neon Starfield Background */}
+      <Starfield />
 
-Nav.displayName = 'Nav';
-export default Nav;
+      {/* Navigation Bar Header */}
+      <header className="w-full px-6 py-4 flex items-center justify-between bg-transparent backdrop-blur-sm border-b border-purple-900/30">
+        <Link to="/" className="flex items-center">
+          <Logo />
+        </Link>
+
+        {/* Right side navigation links are cleaned up as requested */}
+        <div className="flex items-center gap-4">
+          <Link
+            to="/"
+            className="text-gray-300 hover:text-purple-400 font-medium transition-colors"
+          >
+            Home
+          </Link>
+          <Link
+            to="/search"
+            className="text-gray-300 hover:text-purple-400 font-medium transition-colors"
+          >
+            Search
+          </Link>
+        </div>
+      </header>
+    </>
+  );
+}
